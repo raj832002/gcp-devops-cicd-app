@@ -1,0 +1,28 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-t',
+    'us-central1-docker.pkg.dev/devops-cicd-project-free/my-repo/app-image',
+    '.'
+  ]
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'push',
+    'us-central1-docker.pkg.dev/devops-cicd-project-free/my-repo/app-image'
+  ]
+
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    [
+      'run','deploy','my-service',
+      '--image','us-central1-docker.pkg.dev/devops-cicd-project-free/my-repo/app-image',
+      '--region','us-central1',
+      '--platform','managed',
+      '--allow-unauthenticated'
+    ]
+
+images:
+- 'us-central1-docker.pkg.dev/devops-cicd-project-free/my-repo/app-image'
